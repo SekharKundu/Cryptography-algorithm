@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CIPHER</title>
+<link rel= "shortcut icon" type="image/png" href="../files/dk1.png">
+<link rel="stylesheet" type="text/css" href="../css/style1.css">
+<link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
+</head>
+<body>
+
+<header>
+  <div class= "top_menu">
+    <div class= "logo">
+    <a href=../index.html><img src="../files/home1.png" title="Icon" alt="thelogo"></a>
+    </div>
+    <div class="menu_list">
+      <ul>
+      <li><a href='caesar.html'>Caesar Cipher</li></a>
+    <li><a href='des.html'>DES</li></a>
+      </ul>
+    </div>
+    </div>
+
+
+    <body>
+
+    	<div id="home">
+    			<h2>Playfair</h2>
+    	</div>
+
+      <div id="decal">
+  	<form id="encrp">
+  		<table border="0" cellpadding="5" cellspacing="0">
+  			<tr>
+  				<td>
+  					<h3>Plaintext:</h3>
+  				</td>
+  				<td><textarea id="plaintext" cols="50" rows="10" placeholder="Enter your text here"></textarea></td>
+  				<td>
+  					<h4>Chipertext:</h4>
+  				</td>
+  				<td><textarea id="ciphertext" cols="50" rows="10" placeholder="Chipertext"></textarea></td>
+  			</tr>
+  			<tr>
+  				<td>
+  					<h3>Key:</h3>
+  				</td>
+  				<td><input type= "text" id="key" placeholder="Key" style="width:15em" /></td>
+  			</tr>
+  			<tr>
+  			<tr>
+  				<td></td>
+  				<td>
+  					<input type="button" value="Encrypt" class="button" onclick="Encrypt();" />
+  					<input type="button" value="Decrypt" class="button" onclick="dcy();"/>
+            <button type="reset" name="encryptDecrypt" id="reset">Reset</button>
+  				</td>
+  				<td></td>
+  			</tr>
+  		</table>
+  	</form>
+  </div>
+
+  <script type="text/javascript">
+  function Encrypt() {
+    var shift = document.getElementById("key").value;
+    var cipherTextElement = document.getElementById("ciphertext");
+    var plainTextElement = document.getElementById("plaintext");
+    var plain = plainTextElement.value;
+    if (plain.length == 0) {
+      alert("Plaintext cannot be empty!");
+      return;
+    }
+    if (shift.length == 0) {
+      alert("Key cannot be empty!");
+      return;
+    }
+    var key = shift;
+
+    key = constructKeyMatrix(key);
+    plain = editPlain(plain);
+    result = encryptPlayFair(plain, key);
+    cipherTextElement.value = encryptPlayFair(plain, key);
+  }
+
+  function dcy() {
+     var shift = document.getElementById("key").value;
+      var cipherTextElement = document.getElementById("ciphertext");
+      var plainTextElement = document.getElementById("plaintext");
+      var plain = plainTextElement.value;
+      if (plain.length == 0) {
+        alert("Plaintext cannot be empty!");
+        return;
+      }
+      if (shift.length == 0) {
+        alert("Key cannot be empty!");
+        return;
+      }
+      var key = shift;
+
+      key = constructKeyMatrix(key);
+      //plain = editPlain(plain);
+    //  cipherTextElement.value = decryptPlayFair(plain, key);
+     var res = decryptPlayFair(plain, key);
+      if (res.charAt(res.length -1) == "z")
+      var res = res.substring(0 , res.length - 1);
+      console.log(res);
+/*
+      if(res.includes("x"))
+        {
+          if(res.charAt(indexOf("x")-1) == res.charAt(indexOf("x")-1))
+          var sant = res.replace("x","");
+        }*/
+    cipherTextElement.value = res;
+
+  }
+
+
+  function constructKeyMatrix(key) {
+    var alphabet = "abcdefghiklmnopqrstuvwxyz";
+/*   if(key.includes("j"))
+    {
+    var alphabet = "abcdefghjklmnopqrstuvwxyz";
+    }
+  else {
+    var alphabet = "abcdefghiklmnopqrstuvwxyz";
+  }*/
+    key += alphabet;
+    for (let i = 0; i < key.length; i++) {
+      // already exists ?!
+      //secretabcdefghi..
+      if (key.indexOf(key[i]) !== i) {
+        key = key.slice(0, i) + key.slice(i + 1); //abcdefghi => abcd + fghi
+        i--;
+      }
+
+    }
+    return key;
+  }
+  function editPlain(plain) {
+    for (let i = 0; i < plain.length - 1; i += 2)
+    {
+      plain = plain.replace(" ", "");
+    }
+    for (let i = 0; i < plain.length - 1; i += 2) {
+      if (plain[i] === plain[i + 1])
+        plain = plain.slice(0, i + 1) + 'x' + plain.slice(i + 1);
+    }
+
+    if (plain.length % 2 === 1) plain += 'z';
+
+    plain = plain.replace(/j/g, 'i');
+    return plain;
+  }
+
+  function encryptPlayFair(plaintext, key) {
+    var ciphertext = "";
+    for (let i = 0; i < plaintext.length - 1; i += 2) {
+
+      var i1, i2, j1, j2;
+
+      i1 = key.indexOf(plaintext[i]) / 5 | 0;
+      j1 = key.indexOf(plaintext[i]) % 5;
+
+      i2 = key.indexOf(plaintext[i + 1]) / 5 | 0;
+      j2 = key.indexOf(plaintext[i + 1]) % 5;
+
+      //same row
+      if (i1 == i2)
+
+        ciphertext += key[i1 * 5 + (j1 + 1) % 5] + key[i2 * 5 + (j2 + 1) % 5];
+
+      //same column
+      else if (j1 == j2)
+
+        ciphertext += key[((i1 + 1) % 5) * 5 + j1] + key[((i2 + 1) % 5) * 5 + j2];
+
+      else
+
+        ciphertext += key[i1 * 5 + j2] + key[i2 * 5 + j1];
+    }
+    return ciphertext;
+  }
+  function decryptPlayFair(plaintext, key) {
+    var ciphertext = "";
+    for (let i = 0; i < plaintext.length - 1; i += 2) {
+
+      var i1, i2, j1, j2;
+
+      i1 = key.indexOf(plaintext[i]) / 5 | 0;
+      j1 = key.indexOf(plaintext[i]) % 5;
+
+      i2 = key.indexOf(plaintext[i + 1]) / 5 | 0;
+      j2 = key.indexOf(plaintext[i + 1]) % 5;
+
+      //same row
+      if (i1 == i2)
+        ciphertext += key[i1 * 5 + (j1 + 4) % 5] + key[i2 * 5 + (j2 +4 ) % 5];
+
+      //same column
+      else if (j1 == j2)
+        ciphertext += key[((i1 + 4) % 5) * 5 + j1] + key[((i2 + 4) % 5) * 5 + j2];
+
+      else
+
+        ciphertext += key[i1 * 5 + j2] + key[i2 * 5 + j1];
+    }
+  /*    if (chipertext.charAt(chipertext.length -1) == "z")
+      chipertext = chipertext.substract(chipertext.length -1);
+      console.log(chipertext); */
+    return ciphertext;
+  }
+  </script>
+
+    	  <div id="footer">
+    		<h5>Note: You can access the other two algorithms from the top menu!</h5>
+      </div>
+
+    </body>
+
+</header>
+
+</body>
+</html>

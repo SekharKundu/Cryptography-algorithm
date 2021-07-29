@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CIPHER</title>
+<link rel= "shortcut icon" type="image/png" href="../files/dk1.png">
+<link rel="stylesheet" type="text/css" href="../css/style1.css">
+<link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
+</head>
+<body>
+
+<header>
+  <div class= "top_menu">
+    <div class= "logo">
+    <a href=../index.html><img src="../files/home1.png" title="Icon" alt="thelogo"></a>
+    </div>
+    <div class="menu_list">
+      <ul>
+      <li><a href='playfair.html'>Playfair Cipher</li></a>
+    <li><a href='des.html'>DES</li></a>
+      </ul>
+    </div>
+    </div>
+
+
+    <body>
+
+    	<div id="home">
+    			<h2>CAESAR CIPHER</h2>
+    	</div>
+
+      <div id="decal">
+  	<form id="encrp">
+  		<table border="0" cellpadding="5" cellspacing="0">
+  			<tr>
+  				<td>
+  					<h3>Plaintext:</h3>
+  				</td>
+  				<td><textarea id="plaintext" cols="50" rows="10" placeholder="Enter your text here"></textarea></td>
+  				<td>
+  					<h4>Chipertext:</h4>
+  				</td>
+  				<td><textarea id="ciphertext" cols="50" rows="10" placeholder="Chipertext"></textarea></td>
+  			</tr>
+  			<tr>
+  				<td>
+  					<h3>Key:</h3>
+  				</td>
+  				<td><input type="number" id="key" placeholder="1-26" style="width:4em" /></td>
+  			</tr>
+  			<tr>
+  			<tr>
+  				<td></td>
+  				<td>
+  					<input type="button" value="Encrypt" class="button" onclick="Encrypt();" />
+  					<input type="button" value="Decrypt" class="button" onclick="dcy();"/>
+            <button type="reset" name="encryptDecrypt" id="reset">Reset</button>
+  				</td>
+  				<td></td>
+  			</tr>
+  		</table>
+  	</form>
+  </div>
+
+  <script type="text/javascript">
+
+  	function Encrypt() {
+  		var shift = document.getElementById("key").value;
+  		var cipherTextElement = document.getElementById("ciphertext");
+  		var plainTextElement = document.getElementById("plaintext");
+
+  		var plaintext = plainTextElement.value;
+
+  		if (plaintext.length == 0) {
+  			alert("Plaintext cannot be empty!");
+  			return;
+  		}
+  		var key = parseInt(shift, 10);
+  		if (!/^-?\d+$/.test(shift)) {
+  			alert("Shift is not an integer (Key must be an Integer!)");
+  			return;
+  		}
+
+  		cipherTextElement.value = caesarShift(plaintext, key);
+
+  	}
+
+    	function dcy(){
+              var shift = document.getElementById("key").value;
+          		var cipherTextElement = document.getElementById("ciphertext");
+          		var plainTextElement = document.getElementById("plaintext");
+              var plaintext = plainTextElement.value;
+
+        			if(plaintext.length==0){
+        				alert("Plaintext cannot be empty!");
+        				return;
+        		}
+        			var key = parseInt(shift, 10);
+        			if(key < 0 || key >= 26){
+        			alert("Shift is out of range(Range is from 0-26)");
+        			return;
+        		}
+        			if(!/^-?\d+$/.test(shift)){
+        				alert("Shift is not an integer (Key must be an Integer!)");
+        				return;
+        		}
+
+        			key = (26 - key);
+        			//var plainTextElement = document.getElementById("plaintext");
+        		cipherTextElement.value = caesarShift(plaintext, key);
+
+        	}
+
+    	function caesarShift(text, shift) {
+  		var ciphertext = "";
+
+  		for (var i = 0; i < text.length; i++) {
+  			var ch = text.charCodeAt(i);
+
+  			if (65 <= ch && ch <= 90) {
+  				ciphertext += String.fromCharCode((ch - 65 + shift) % 26 + 65);
+  			}
+  			else if (97 <= ch && ch <= 122) {
+  				ciphertext += String.fromCharCode((ch - 97 + shift) % 26 + 97);
+  			}
+  			else {
+  				ciphertext += text.charAt(i);
+  			}
+  		}
+  		//  output.textContent = ciphertext;
+  		//  document.getElementById("ciphertext").value = chipertext;
+  		return ciphertext;
+  	}
+
+  </script>
+
+    	  <div id="footer">
+    		<h5>Note: You can access the other two algorithms from the top menu!</h5>
+      </div>
+
+    </body>
+
+</header>
+
+</body>
+</html>
